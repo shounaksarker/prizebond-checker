@@ -1,12 +1,10 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import pool from "@lib/db";
+import db from "@lib/db";
 import { cookies } from "next/headers";
 import dotenv from "dotenv";
+import { generateToken } from "@lib/auth";
 
 dotenv.config();
-
-const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 
 export async function POST(request) {
   try {
@@ -21,7 +19,7 @@ export async function POST(request) {
       });
     }
 
-    const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+    const [users] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
     if (!users.length) {
       return Response.json({
         success: false,
@@ -43,9 +41,9 @@ export async function POST(request) {
       });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: "150d" });
-
-    cookies().set("token", token, { httpOnly: true, maxAge: 150 * 24 * 60 * 60 });
+    const token = await generateToken(user);
+    const cookieStore = await cookies();
+    cookieStore.set("token", token, { httpOnly: true, maxAge: 150 * 24 * 60 * 60 });
 
     return Response.json({
       success: true,

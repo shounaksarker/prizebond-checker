@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import pool from "@lib/db";
+import db from "@lib/db";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -20,7 +20,7 @@ export async function POST(request) {
     }
 
     // Check if the user already exists
-    const [existingUser] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+    const [existingUser] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
     if (existingUser.length) {
       return Response.json({
         success: false,
@@ -34,7 +34,7 @@ export async function POST(request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert user
-    await pool.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hashedPassword]);
+    await db.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hashedPassword]);
 
     return Response.json({
       success: true,
