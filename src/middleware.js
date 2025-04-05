@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
 export const config = {
-  matcher: ["/api/draw", "/api/user/prize-bond"],
+  matcher: ["/api/draw","/api/user", "/api/user/prize-bond"],
 };
 
 export async function middleware(request) {

@@ -7,7 +7,7 @@ dotenv.config();
 // **User Signup**
 export async function POST(request) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, password, mobile = null } = await request.json();
 
     if (!name || !email || !password) {
       return Response.json({
@@ -30,11 +30,9 @@ export async function POST(request) {
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user
-    await db.query("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [name, email, hashedPassword]);
+    await db.query("INSERT INTO users (name, email, password, mobile) VALUES (?, ?, ?, ?)", [name, email, hashedPassword, mobile]);
 
     return Response.json({
       success: true,
@@ -42,6 +40,7 @@ export async function POST(request) {
       message: "User registered successfully",
     });
   } catch (error) {
+    console.log('📛 👉 ~ POST ~ error:', error);
     return Response.json({
       success: false,
       status: 500,
