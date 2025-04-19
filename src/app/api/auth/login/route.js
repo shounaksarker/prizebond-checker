@@ -44,7 +44,7 @@ export async function POST(request) {
     delete user.password;
     const token = await generateToken(user);
     const cookieStore = await cookies();
-    cookieStore.set("token", token, { httpOnly: true, maxAge: 150 * 24 * 60 * 60 });
+    cookieStore.set("token", token, { httpOnly: true, maxAge: 365 * 24 * 60 * 60 });
 
     return Response.json({
       success: true,

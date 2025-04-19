@@ -10,9 +10,9 @@ export const prizeBondAPI = {
   deleteBond: (id) =>
     apiRequest({ method: 'DELETE', url: `/user/prize-bond`, data: { id }, requiresAuth: true }),
     
-  getDraws: () =>
-    apiRequest({ method: 'GET', url: '/draws' }),
+  getDrawRange: () =>
+    apiRequest({ method: 'POST', url: '/draw' }),
     
   matchResult: (drawId) =>
-    apiRequest({ method: 'GET', url: `/results/match/${drawId}`, requiresAuth: true }),
+    apiRequest({ method: 'GET', url: `/draw?draw_id=${drawId}`, requiresAuth: true }),
 };

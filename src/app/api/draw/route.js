@@ -73,3 +73,43 @@ export async function GET(request) {
     });
   }
 }
+
+// get lower and upper draw_id
+export async function POST(request) {
+  try {
+    const headersList = request.headers;
+    const user_id = headersList.get("user_id");
+    
+    if (!user_id) {
+      return Response.json({
+        success: false,
+        status: 401,
+        message: "Unauthorized: Token is required",
+      });
+    }
+
+    // Query to check if user's numbers have won
+    const query = `
+      SELECT 
+        MIN(draw_id) AS first_draw, 
+        MAX(draw_id) AS last_draw
+      FROM prize_draws`;
+
+    const [results] = await db.query(query);
+
+    return Response.json({
+      success: true,
+      status: 200,
+      data: results.length ? results[0] : null,
+      message: "Draw range fetched successfully",
+    });
+
+  } catch (error) {
+    return Response.json({
+      success: false,
+      status: 500,
+      error: error.message,
+      message: "Failed to fetch prize draw results",
+    });
+  }
+}

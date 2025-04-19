@@ -7,7 +7,7 @@
       "@utils/*": ["./src/utils/*"],
       "@apiManager/*": ["./src/api-manager/*"],
       "@lib/*": ["./src/lib/*"],
-      "@assets": ["./src/assets/*"],
+      "@assets/*": ["./src/assets/*"],
     }
   }
 }

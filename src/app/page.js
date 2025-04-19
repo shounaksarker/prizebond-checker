@@ -76,7 +76,7 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Link href="/results">
+              <Link href="/result">
                 <Button className="w-full" variant="secondary">
                   Check Results
                   <ArrowRight className="ml-2 h-4 w-4" />

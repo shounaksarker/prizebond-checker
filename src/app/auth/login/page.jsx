@@ -8,7 +8,6 @@ import { Button } from '@components/ui/button';
 import { Label } from '@components/ui/label';
 import { authAPI } from '@apiManager/authAPI';
 import Link from 'next/link';
-import { toast } from 'sonner';
 import Notification from '@components/notification';
 
 export default function LoginPage() {
@@ -39,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-2">
+    <div className="min-h-[92vh] flex items-center justify-center bg-gray-50 px-2">
       <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>Welcome Back</CardTitle>
