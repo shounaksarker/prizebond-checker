@@ -1,4 +1,6 @@
 "use client";
+
+import React, { useEffect, useState } from "react";
 import { authAPI } from "@apiManager/authAPI";
 import Notification from "@components/notification";
 import { Button } from "@components/ui/button";
@@ -6,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
 import { Edit2, Save } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useTranslation } from "@lib/translation/useTranslation";
 
 const UserProfile = ({ loading, setLoading }) => {
   const [editMode, setEditMode] = useState(false);
@@ -15,6 +17,7 @@ const UserProfile = ({ loading, setLoading }) => {
     email: "",
     mobile: "",
   });
+  const { t } = useTranslation();
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -53,14 +56,13 @@ const UserProfile = ({ loading, setLoading }) => {
       if (!response.data) {
         return Notification({ message: "No user data found." });
       }
-      // setUser(response.data);
+
       setUserForm({
         name: response.data.name,
         email: response.data.email,
         mobile: response.data.mobile || "",
       });
     } catch (error) {
-      console.log('📛 👉 ~ fetchUserData ~ error:', error);
       Notification({
         message: "Failed to fetch user data due to technical issue.",
       });
@@ -73,21 +75,21 @@ const UserProfile = ({ loading, setLoading }) => {
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>Profile Information</CardTitle>
+          <CardTitle>{t('profile_info')}</CardTitle>
           <Button variant="outline" onClick={() => setEditMode(!editMode)}>
             {editMode ? (
               <Save className="h-4 w-4 mr-2" />
             ) : (
-              <Edit2 className="h-4 w-4 mr-2" />
+              <Edit2 className="h-4 w-4 mr-1" />
             )}
-            {editMode ? "Save" : "Edit"}
+            {editMode ? t('save') : t('edit')}
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label htmlFor="name"> {t('full_name')} </Label>
             <Input
               id="name"
               value={userForm.name}
@@ -98,7 +100,7 @@ const UserProfile = ({ loading, setLoading }) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('email')}</Label>
             <Input
               id="email"
               type="email"
@@ -110,7 +112,7 @@ const UserProfile = ({ loading, setLoading }) => {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="mobile">Mobile Number</Label>
+            <Label htmlFor="mobile">{t("mobile_number")}</Label>
             <Input
               id="mobile"
               type="tel"
@@ -123,7 +125,7 @@ const UserProfile = ({ loading, setLoading }) => {
           </div>
           {editMode && (
             <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : "Save Changes"}
+              {loading ? t('saving') : t('save_changes')}
             </Button>
           )}
         </form>

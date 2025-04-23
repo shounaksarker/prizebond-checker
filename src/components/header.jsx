@@ -4,17 +4,23 @@ import React from "react";
 import logo from "../assets/logo.jpeg";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from '../context/languageContext';
 import { useAuth } from "@lib/isLoggedIn";
+import { signOut, auth } from '@lib/firebase';
 import { authAPI } from "@apiManager/authAPI";
 import Notification from "./notification";
+import { useTranslation } from '@lib/translation/useTranslation';
 
 const header = () => {
   const isAuthenticated = useAuth();
+  const { lang, setLang } = useLanguage();
+  const { t } = useTranslation();
   const logout = async () => {
     const response = await authAPI.logout();
     if (response.error) {
       return Notification({ message: response.message || "Something Error" });
     }
+    await signOut(auth);
     localStorage.removeItem("token");
     location.reload();
   };
@@ -27,7 +33,7 @@ const header = () => {
     }
   };
   return (
-    <div className="flex items-center justify-between p-2">
+    <div className="flex items-center justify-between p-2 lg:px-6 sticky top-0 bg-white shadow-md z-10">
       <div>
         <Image src={logo} alt="Logo" width={50} height={50} />
       </div>
@@ -36,26 +42,31 @@ const header = () => {
           className="px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
           href={"/"}
         >
-          Home
+          {t('home')}
         </Link>
         <Link
           className="px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
           href={"/profile"}
         >
-          Profile / Add Prizebond
+          {t('profile_add')}
         </Link>
         <Link
           className="px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
           href={"/result"}
         >
-          Result
+          {t('result')}
         </Link>
         <button
           onClick={()=>handleAuth()}
-          href={"/auth/login"}
           className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-full transition duration-200 text-sm"
         >
-          {isAuthenticated ? "Logout" : "Login"}
+          {isAuthenticated ? `${t('logout')}` : `${t('login')}`}
+        </button>
+        <button
+          onClick={()=> setLang(lang === 'bn' ? 'en' : 'bn')}
+          className="bg-green-200 hover:bg-green-300 px-1 py-0.5 rounded transition duration-200 text-xs"
+        >
+          {lang === 'bn' ? 'En' : 'বাং'}
         </button>
       </div>
     </div>

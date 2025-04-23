@@ -1,10 +1,12 @@
+import React from "react";
 import { Button } from "@components/ui/button";
 import { CardContent } from "@components/ui/card";
 import { Skeleton } from "@components/ui/skeleton";
 import { Trash2 } from "lucide-react";
-import React from "react";
+import { useTranslation } from "@lib/translation/useTranslation";
 
 const BondList = ({ bonds, bondLoading, handleDeleteBond }) => {
+  const { t } = useTranslation();
   return (
     <CardContent>
       <div className="space-y-4">
@@ -15,7 +17,7 @@ const BondList = ({ bonds, bondLoading, handleDeleteBond }) => {
             ))}
           </div>
         ) : !bonds.length && !bondLoading ? (
-          <p className="text-center text-gray-500">No prize bonds added yet.</p>
+          <p className="text-center text-gray-500">{t('no_bonds')}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {bonds.map((bond) => (
@@ -28,6 +30,7 @@ const BondList = ({ bonds, bondLoading, handleDeleteBond }) => {
                   variant="destructive"
                   size="sm"
                   onClick={() => handleDeleteBond(bond.id)}
+                  className={"cursor-pointer"}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

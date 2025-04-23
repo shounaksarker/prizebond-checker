@@ -7,6 +7,7 @@ import Notification from "@components/notification";
 import BondList from "@components/profile/BondList";
 import AddBonds from "@components/profile/AddBonds";
 import UserProfile from "@components/profile/UserProfile";
+import { useTranslation } from "@lib/translation/useTranslation";
 
 export default function ProfilePage() {
   const [bonds, setBonds] = useState([]);
@@ -21,6 +22,8 @@ export default function ProfilePage() {
     start: "",
     end: "",
   });
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchBonds();
@@ -176,12 +179,10 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="space-y-8">
-          <UserProfile loading={loading} setLoading={setLoading} />
-
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle>Prize Bonds</CardTitle>
+                <CardTitle> {t('prize_bonds')} </CardTitle>
                 <AddBonds
                   singleBonds={singleBonds}
                   handleBondField={handleBondField}
@@ -202,6 +203,8 @@ export default function ProfilePage() {
               handleDeleteBond={handleDeleteBond}
             />
           </Card>
+
+          <UserProfile loading={loading} setLoading={setLoading} />
         </div>
       </div>
     </div>

@@ -8,8 +8,9 @@ import { Button } from '@components/ui/button';
 import { Label } from '@components/ui/label';
 import { authAPI } from '@apiManager/authAPI';
 import Link from 'next/link';
-import { toast } from 'sonner';
 import Notification from '@components/notification';
+import GoogleAuthButton from '@components/googleAuthBtn';
+import { useTranslation } from '@lib/translation/useTranslation';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function SignupPage() {
     confirmPassword: '',
     mobile: '',
   });
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,8 +38,9 @@ export default function SignupPage() {
       if (response.error) {
         return Notification({ message: response.error || 'Something went wrong' });
       }
+      localStorage.setItem('token', response.data.token);
       Notification({ type:'success', message: 'Account created successfully. Please login.', background: 'green', duration: 5000 });
-      router.push('/auth/login');
+      router.push('/');
     } catch (error) {
       Notification({ message: 'Signup failed due to technical issue.' });
     } finally {
@@ -46,77 +49,78 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-[92vh] flex items-center justify-center bg-gray-50 px-2">
+    <div className="min-h-[92vh] flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-[400px]">
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-          <CardDescription>Sign up for your prize bond account</CardDescription>
+          <CardTitle> {t('create_account')} </CardTitle>
+          <CardDescription>{t('signup_prompt')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 mb-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{t('full_name')}</Label>
               <Input
                 id="name"
-                placeholder="Enter your full name"
+                placeholder={t('enter_full_name')}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('enter_email')}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="mobile">Mobile Number (Optional)</Label>
+              <Label htmlFor="mobile">{t('mobile_number')} ({t('optional')})</Label>
               <Input
                 id="mobile"
                 type="tel"
-                placeholder="Enter your mobile number"
+                placeholder={t('enter_mobile_number')}
                 value={formData.mobile}
                 onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('password')}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Create a password"
+                placeholder={t('create_password')}
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t('confirm_password')}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm your password"
+                placeholder={t('confirm_password')}
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 required
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Sign Up'}
+              {loading ? t('creating_account') : t('sign_up')}
             </Button>
-            <p className="text-center text-sm text-gray-600">
-              Already have an account?{' '}
+          </form>
+          <GoogleAuthButton signup={true} />
+            <p className="text-center text-sm text-gray-600 mt-4">
+              {t('already_have_account')}{' '}
               <Link href="/auth/login" className="text-primary hover:underline">
-                Login
+                {t('login')}
               </Link>
             </p>
-          </form>
         </CardContent>
       </Card>
     </div>

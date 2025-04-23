@@ -1,18 +1,31 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@components/ui/select';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 import { prizeBondAPI } from "@apiManager/prizeBondAPI";
-import { Search, Trophy } from 'lucide-react';
-import Notification from '@components/notification';
-
+import { Search, Trophy } from "lucide-react";
+import Notification from "@components/notification";
+import { useTranslation } from "@lib/translation/useTranslation";
 
 export default function ResultsPage() {
   const [drawNo, setDrawNo] = useState([]);
-  const [selectedDraw, setSelectedDraw] = useState('');
+  const [selectedDraw, setSelectedDraw] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchDraws();
@@ -22,15 +35,19 @@ export default function ResultsPage() {
     try {
       const response = await prizeBondAPI.getDrawRange();
       if (!response.success || response.error) {
-        return Notification({ message: response?.message || "Failed to fetch draws"});
+        return Notification({
+          message: response?.message || "Failed to fetch draws",
+        });
       }
-      if(!response.data) {
+      if (!response.data) {
         return Notification({ message: "No draws available" });
       }
       // setDraws(response?.data);
       generateDrawOptions(response.data);
     } catch (error) {
-      Notification({ message: "Failed to fetch draws due to technical issue." });
+      Notification({
+        message: "Failed to fetch draws due to technical issue.",
+      });
     }
   };
 
@@ -40,13 +57,15 @@ export default function ResultsPage() {
     try {
       const matchResults = await prizeBondAPI.matchResult(parseInt(drawId));
       if (!matchResults.success || matchResults.error) {
-        return Notification({ message: matchResults?.message || "Failed to fetch results" });
+        return Notification({
+          message: matchResults?.message || "Failed to fetch results",
+        });
       }
-      if(matchResults.data) {
+      if (matchResults.data) {
         setResults(matchResults.data);
       }
     } catch (error) {
-      console.error('Failed to fetch results:', error);
+      console.error("Failed to fetch results:", error);
     } finally {
       setLoading(false);
     }
@@ -54,7 +73,7 @@ export default function ResultsPage() {
 
   const generateDrawOptions = (data) => {
     if (!data) setDrawNo([]);
-    
+
     const options = [];
     const { first_draw, last_draw } = data;
     for (let i = first_draw; i <= last_draw; i++) {
@@ -77,10 +96,11 @@ export default function ResultsPage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Prize Bond Results</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            {t('prize_bond_results')}
+          </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Check if your prize bonds have won in any of our draws. Select a draw number
-            below to see if fortune smiles upon you today!
+            {t("results_description")}
           </p>
         </div>
 
@@ -88,24 +108,19 @@ export default function ResultsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Search className="h-5 w-5" />
-              Select Draw
+              {t("select_draw")}
             </CardTitle>
-            <CardDescription>
-              Choose a draw number to check your results
-            </CardDescription>
+            <CardDescription>{t("choose_draw")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Select
-              value={selectedDraw}
-              onValueChange={handleDrawSelect}
-            >
+            <Select value={selectedDraw} onValueChange={handleDrawSelect}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a draw number" />
+                <SelectValue placeholder={t("select_draw_number")} />
               </SelectTrigger>
               <SelectContent>
                 {drawNo.map((drawNum) => (
                   <SelectItem key={drawNum} value={drawNum.toString()}>
-                    {addOrdinalSuffix(drawNum)} Draw
+                    {addOrdinalSuffix(drawNum)} {t("draw")}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -116,7 +131,9 @@ export default function ResultsPage() {
         {loading ? (
           <Card>
             <CardContent className="py-8">
-              <p className="text-center text-gray-500">Loading results...</p>
+              <p className="text-center text-gray-500">
+                {t("loading_results")}...
+              </p>
             </CardContent>
           </Card>
         ) : selectedDraw && results.length > 0 ? (
@@ -124,11 +141,9 @@ export default function ResultsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Trophy className="h-5 w-5" />
-                Winning Results
+                {t("winning_results")}
               </CardTitle>
-              <CardDescription>
-                Congratulations! The following bonds have won prizes
-              </CardDescription>
+              <CardDescription>{t("congrats")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -138,12 +153,16 @@ export default function ResultsPage() {
                     className="bg-green-50 border border-green-200 rounded-lg p-4 flex justify-between items-center"
                   >
                     <div>
-                      <p className="font-medium text-green-800">{result.bond_number}</p>
-                      <p className="text-sm text-green-600">{result.prize_name}</p>
+                      <p className="font-medium text-green-800">
+                        {result.bond_number}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        {result.prize_name}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-green-800">
-                        Tk. {result.prize_amount.toLocaleString()}
+                        {t('tk')} {result.prize_amount.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -155,7 +174,7 @@ export default function ResultsPage() {
           <Card>
             <CardContent className="py-8">
               <p className="text-center text-gray-500">
-                No winning bonds found in this draw. Better luck next time!
+                {t('no_win')}
               </p>
             </CardContent>
           </Card>

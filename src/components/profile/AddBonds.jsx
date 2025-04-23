@@ -1,3 +1,6 @@
+'use client'
+
+import React, { useEffect, useRef } from "react";
 import { Button } from "@components/ui/button";
 import {
   Dialog,
@@ -11,7 +14,7 @@ import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 import { Plus, Trash2 } from "lucide-react";
-import React from "react";
+import { useTranslation } from "@lib/translation/useTranslation";
 
 const AddBonds = ({
   singleBonds,
@@ -25,33 +28,42 @@ const AddBonds = ({
   handleAddRangeBonds,
   closeBtnRef
 }) => {
+  const { t } = useTranslation();
+  const lastInputRef = useRef(null);
+
+useEffect(() => {
+  if (lastInputRef.current) {
+    lastInputRef.current.scrollIntoView({ behavior: 'smooth'});
+  }
+}, [singleBonds.length]);
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Prize Bonds
+          <Plus className="h-4 w-4" />
+          {t("add_prize_bonds")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Prize Bonds</DialogTitle>
+          <DialogTitle>{t("add_prize_bonds")}</DialogTitle>
         </DialogHeader>
         <Tabs defaultValue="single">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="single">Single Entry</TabsTrigger>
-            <TabsTrigger value="range">Range Entry</TabsTrigger>
+            <TabsTrigger value="single"> {t('single_entry')} </TabsTrigger>
+            <TabsTrigger value="range"> {t('range_entry')} </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="single" className="space-y-4">
+          <TabsContent value="single">
+            <div className="max-h-80 overflow-y-scroll space-y-4 p-1 mb-3">
             {singleBonds.map((bond, index) => (
-              <div key={index} className="flex gap-2">
+              <div key={index} className="flex gap-2" ref={index === singleBonds.length - 1 ? lastInputRef : null}>
                 <Input
-                  placeholder="Enter bond number"
+                  placeholder={t("enter_bond_number")}
                   value={bond}
                   onChange={(e) => handleBondField(index, e.target.value)}
                 />
-                {index === singleBonds.length - 1 && (
+                {index === singleBonds.length - 1 && (bond || !index) && (
                   <Button
                     type="button"
                     variant="outline"
@@ -71,18 +83,19 @@ const AddBonds = ({
                 )}
               </div>
             ))}
+            </div>
             <Button
               onClick={handleAddSingleBonds}
               disabled={loading}
               className="w-full"
             >
-              {loading ? "Adding..." : "Add Bonds"}
+              {loading ? t('adding') : t('add_bonds')}
             </Button>
           </TabsContent>
 
           <TabsContent value="range" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="startRange">Start Number</Label>
+              <Label htmlFor="startRange">{t('start_number')}</Label>
               <Input
                 id="startRange"
                 placeholder="e.g., 07812"
@@ -96,7 +109,7 @@ const AddBonds = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="endRange">End Number</Label>
+              <Label htmlFor="endRange"> {t('end_number')} </Label>
               <Input
                 id="endRange"
                 placeholder="e.g., 07815"
@@ -114,7 +127,7 @@ const AddBonds = ({
               disabled={loading}
               className="w-full"
             >
-              {loading ? "Adding..." : "Add Range"}
+              {loading ? t('adding') : t('add_range')}
             </Button>
           </TabsContent>
         </Tabs>
