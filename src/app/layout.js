@@ -19,6 +19,9 @@ export const metadata = {
   title: "প্রাইজ বন্ড ফলাফল | Prize Bond Checker Bangladesh",
   description:
     "বাংলাদেশ প্রাইজ বন্ড ড্র ফলাফল অনলাইনে দ্রুত ও সহজে যাচাই করুন।",
+  verification: {
+    google: "USrTkPNcQfxDTKsPdgSpegI871zA5wLu0WXxk-Oj05k",
+  },
   keywords: [
     "প্রাইজ বন্ড",
     "প্রাইজবন্ড",
