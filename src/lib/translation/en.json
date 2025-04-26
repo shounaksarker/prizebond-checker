@@ -67,5 +67,8 @@
   "enter_password": "Enter your password",
   "enter_full_name": "Enter your full name",
   "enter_mobile_number": "Enter your mobile number",
-  "create_password": "Create a password"
+  "create_password": "Create a password",
+  "official_results": "Official Results",
+  "official_results_desc": "Check the official prize bond results from the Govt Site of Bangladesh.",
+  "official_results_link": "Results Link"
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import logo from "../assets/logo.jpeg";
+import logo from "../app/og-image.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from '../context/languageContext';
@@ -32,30 +32,27 @@ const header = () => {
       location.href = "/auth/login";
     }
   };
+
+  const LINKS = [
+    { name: t('home'), path: "/" },
+    { name: t('profile_add'), path: "/profile" },
+    { name: t('result'), path: "/result" },
+  ]
   return (
-    <div className="flex items-center justify-between p-2 lg:px-6 sticky top-0 bg-white shadow-md z-10">
-      <div>
-        <Image src={logo} alt="Logo" width={50} height={50} />
-      </div>
-      <div className="flex items-center justify-end gap-x-4 md:gap-x-6">
-        <Link
-          className="px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
-          href={"/"}
-        >
-          {t('home')}
-        </Link>
-        <Link
-          className="px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
-          href={"/profile"}
-        >
-          {t('profile_add')}
-        </Link>
-        <Link
-          className="px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
-          href={"/result"}
-        >
-          {t('result')}
-        </Link>
+    <div className="flex flex-wrap items-center justify-between p-2 lg:px-6 sticky top-0 bg-white shadow-md z-10">
+      <Link href={"/"} className="hidden sm:block">
+        <Image src={logo} alt="প্রাইজ বন্ড prize bond" width={60} height={60} />
+      </Link>
+      <div className="flex items-center justify-end gap-x-4 md:gap-x-6 text-xs sm:text-base">
+        {LINKS.map((link, index) => (
+          <Link
+            key={index}
+            className="w-auto px-2 py-1 rounded transition duration-200 hover:bg-black hover:text-white"
+            href={link.path}
+          >
+            {link.name}
+          </Link>
+        ))}
         <button
           onClick={()=>handleAuth()}
           className="bg-red-500 hover:bg-red-700 text-white px-2 py-1 rounded-full transition duration-200 text-sm"

@@ -150,7 +150,9 @@ export default function ProfilePage() {
         type: "success",
       });
     } catch (error) {
-      console.error("Failed to delete bond:", error);
+      Notification({
+        message: "Failed to delete bond due to technical issue.",
+      });
     }
   };
 

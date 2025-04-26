@@ -19,6 +19,7 @@ import { prizeBondAPI } from "@apiManager/prizeBondAPI";
 import { Search, Trophy } from "lucide-react";
 import Notification from "@components/notification";
 import { useTranslation } from "@lib/translation/useTranslation";
+import Link from "next/link";
 
 export default function ResultsPage() {
   const [drawNo, setDrawNo] = useState([]);
@@ -65,7 +66,9 @@ export default function ResultsPage() {
         setResults(matchResults.data);
       }
     } catch (error) {
-      console.error("Failed to fetch results:", error);
+      Notification({
+        message: "Failed to fetch results due to technical issue.",
+      });
     } finally {
       setLoading(false);
     }
@@ -97,7 +100,7 @@ export default function ResultsPage() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {t('prize_bond_results')}
+            {t("prize_bond_results")}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             {t("results_description")}
@@ -162,7 +165,7 @@ export default function ResultsPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold text-green-800">
-                        {t('tk')} {result.prize_amount.toLocaleString()}
+                        {t("tk")} {result.prize_amount.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -173,12 +176,22 @@ export default function ResultsPage() {
         ) : selectedDraw ? (
           <Card>
             <CardContent className="py-8">
-              <p className="text-center text-gray-500">
-                {t('no_win')}
-              </p>
+              <p className="text-center text-gray-500">{t("no_win")}</p>
             </CardContent>
           </Card>
         ) : null}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>{t("official_results")}</CardTitle>
+            <CardDescription>
+              {t("official_results_desc")} -{" "}
+              <Link className="text-blue-800 underline" target="_blank" href="https://nationalsavings.gov.bd/site/page/2be4013b-857c-4e88-81ca-5a53b39dcacd/প্রাইজ-বন্ড-ফলাফল">
+                {t("official_results_link")}
+              </Link>{" "}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+        {/* nationalsavings.gov.bd/site/page/2be4013b-857c-4e88-81ca-5a53b39dcacd/প্রাইজ-বন্ড-ফলাফল */}
       </div>
     </div>
   );

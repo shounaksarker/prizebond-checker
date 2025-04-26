@@ -67,5 +67,8 @@
   "enter_password": "আপনার পাসওয়ার্ড লিখুন",
   "enter_full_name": "আপনার পূর্ণ নাম লিখুন",
   "enter_mobile_number": "আপনার মোবাইল নম্বর লিখুন",
-  "create_password": "একটি পাসওয়ার্ড লিখুন"
+  "create_password": "একটি পাসওয়ার্ড লিখুন",
+  "official_results": "অফিসিয়াল ফলাফল",
+  "official_results_desc": "বাংলাদেশ সরকারের সাইট থেকে সরকারি প্রাইজ বন্ড ফলাফল চেক করুন।",
+  "official_results_link": "ফলাফল লিংক"
 }

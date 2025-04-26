@@ -117,7 +117,7 @@ export default function SignupPage() {
           <GoogleAuthButton signup={true} />
             <p className="text-center text-sm text-gray-600 mt-4">
               {t('already_have_account')}{' '}
-              <Link href="/auth/login" className="text-primary hover:underline">
+              <Link href="/auth/login" className="text-primary font-semibold hover:underline">
                 {t('login')}
               </Link>
             </p>
