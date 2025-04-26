@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@components/ui/card';
 import { Input } from '@components/ui/input';
 import { Button } from '@components/ui/button';
@@ -13,7 +12,6 @@ import GoogleAuthButton from '@components/googleAuthBtn';
 import { useTranslation } from '@lib/translation/useTranslation';
 
 export default function SignupPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -40,7 +38,7 @@ export default function SignupPage() {
       }
       localStorage.setItem('token', response.data.token);
       Notification({ type:'success', message: 'Account created successfully. Please login.', background: 'green', duration: 5000 });
-      router.push('/');
+     window.location.href = "/"
     } catch (error) {
       Notification({ message: 'Signup failed due to technical issue.' });
     } finally {

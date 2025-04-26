@@ -1,14 +1,12 @@
 "use client";
 import { signInWithPopup, auth, provider } from "@lib/firebase";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
 import { authAPI } from "@apiManager/authAPI";
 import Notification from "./notification";
 import Image from "next/image";
 import googleIcon from "@assets/google.png";
 
 export default function GoogleAuthButton( { signup = false }) {
-  const router = useRouter();
 
   const login = async () => {
     try {
@@ -40,7 +38,7 @@ export default function GoogleAuthButton( { signup = false }) {
         background: "green",
         duration: 5000,
       });
-      router.push("/");
+      window.location.href = "/"
     } catch (error) {
       Notification({
         message: "Login Failed for technical issue.",

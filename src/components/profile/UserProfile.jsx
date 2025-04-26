@@ -35,13 +35,13 @@ const UserProfile = ({ loading, setLoading }) => {
           type: "success",
         });
       }
-      setEditMode(false);
     } catch (error) {
       Notification({
         message: "Failed to update profile due to technical issue.",
       });
     } finally {
       setLoading(false);
+      setEditMode(false);
     }
   };
 

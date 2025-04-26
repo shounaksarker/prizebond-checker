@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -19,7 +18,6 @@ import GoogleAuthButton from "@components/googleAuthBtn";
 import { useTranslation } from "@lib/translation/useTranslation";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -36,7 +34,8 @@ export default function LoginPage() {
         return Notification({ message: response.error || "Something Error" });
       } else {
         localStorage.setItem("token", response.data.token);
-        router.push("/");
+        Notification({ message: "Login Successful", type: "success" });
+        window.location.href = "/"
       }
     } catch (error) {
       Notification({ message: "Login Failed for technical issue." });
