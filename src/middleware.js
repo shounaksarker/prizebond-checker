@@ -4,13 +4,9 @@ import { headers } from "next/headers";
 
 export const config = {
   matcher: [
-    "/api/draw",
-    "/api/user",
-    "/api/user/prize-bond",
+    "/api/:path*",  // Match all API routes
     "/profile",
     "/result",
-    // "/auth/login",
-    // "/auth/signup",
   ],
 };
 
