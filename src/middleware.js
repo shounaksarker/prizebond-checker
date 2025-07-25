@@ -43,6 +43,16 @@ export async function middleware(request) {
   // Prefer Authorization header if present (for API), else fallback to cookie (for pages)
   const token = tokenFromHeader || (tokenFromCookie ? `Bearer ${tokenFromCookie}` : null);
 
+  // Skip authentication for auth routes
+  const isAuthRoute = pathname.startsWith("/api/auth");
+  
+  if (isAuthRoute) {
+    // For auth routes, just return with CORS headers
+    return NextResponse.next({
+      headers: corsHeaders,
+    });
+  }
+
   const user = await isAuthenticated(token);
 
   if(user && user.id && pathname.startsWith("/auth")) {
