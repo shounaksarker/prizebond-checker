@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 
 export const config = {
   matcher: [
-    "/api/:path*",  // Match all API routes
+    "/api/:path*",  // Match ALL API routes for CORS
     "/profile",
     "/result",
   ],
@@ -21,6 +21,7 @@ export async function middleware(request) {
     "http://localhost:3000"
   ];
 
+  // Set CORS headers if origin is allowed
   const corsHeaders = {};
   if (allowedOrigins.includes(origin)) {
     corsHeaders["Access-Control-Allow-Origin"] = origin;
@@ -43,11 +44,18 @@ export async function middleware(request) {
   // Prefer Authorization header if present (for API), else fallback to cookie (for pages)
   const token = tokenFromHeader || (tokenFromCookie ? `Bearer ${tokenFromCookie}` : null);
 
-  // Skip authentication for auth routes
-  const isAuthRoute = pathname.startsWith("/api/auth");
-  
-  if (isAuthRoute) {
-    // For auth routes, just return with CORS headers
+  // Define public routes that don't require authentication
+  const publicRoutes = [
+    "/api/auth/login",
+    "/api/auth/signup",
+    "/api/auth/google",
+  ];
+
+  // Check if current route is public
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+  // Skip auth check for public routes but still apply CORS
+  if (isPublicRoute) {
     return NextResponse.next({
       headers: corsHeaders,
     });
@@ -62,7 +70,7 @@ export async function middleware(request) {
   if (!user || !user.id) {
     if (pathname.startsWith("/api")) {
       return NextResponse.json(
-        { success: false, status: 401, message: "Authentication failed -->" },
+        { success: false, status: 401, message: "Authentication failed" },
         { status: 401, headers: corsHeaders }
       );
     }
