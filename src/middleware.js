@@ -20,6 +20,7 @@ export async function middleware(request) {
   const allowedOrigins = [
     "https://prizebond.shounakraj.com",
     "https://prizebondbd.vercel.app",
+    "http://localhost:3000"
   ];
 
   // 🔧 Set correct CORS origin if allowed
