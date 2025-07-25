@@ -35,7 +35,7 @@ export default function LoginPage() {
       } else {
         localStorage.setItem("token", response.data.token);
         Notification({ message: "Login Successful", type: "success" });
-        window.location.href = "/"
+        window.location.href = "/";
       }
     } catch (error) {
       Notification({ message: "Login Failed for technical issue." });
@@ -48,17 +48,17 @@ export default function LoginPage() {
     <div className="min-h-[92vh] flex items-center justify-center bg-gray-50 px-2">
       <Card className="w-[400px]">
         <CardHeader>
-          <CardTitle>{t('welcome_back')}</CardTitle>
-          <CardDescription>{t('login_prompt')}</CardDescription>
+          <CardTitle>{t("welcome_back")}</CardTitle>
+          <CardDescription>{t("login_prompt")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{t('email')}</Label>
+              <Label htmlFor="email">{t("email")}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder={t('enter_email')}
+                placeholder={t("enter_email")}
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -67,11 +67,11 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{t('password')}</Label>
+              <Label htmlFor="password">{t("password")}</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder={t('enter_password')}
+                placeholder={t("enter_password")}
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
@@ -79,19 +79,23 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
-              {loading ? t('logining') : t('login')}
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={loading}
+            >
+              {loading ? t("logining") : t("login")}
             </Button>
           </form>
           <div className="flex flex-col gap-y-4 mt-4">
             <GoogleAuthButton />
             <p className="text-center text-sm text-gray-600">
-              {t('no_account')}{" "}
+              {t("no_account")}{" "}
               <Link
                 href="/auth/signup"
                 className="text-primary hover:underline font-semibold"
               >
-                {t('sign_up')}
+                {t("sign_up")}
               </Link>
             </p>
           </div>
