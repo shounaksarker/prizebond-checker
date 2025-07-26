@@ -44,12 +44,17 @@ export async function POST(request) {
     delete user.password;
     const token = await generateToken(user);
     const cookieStore = await cookies();
-    cookieStore.set("token", token, { httpOnly: true, maxAge: 365 * 24 * 60 * 60 });
+    cookieStore.set("token", token, { 
+      httpOnly: true, 
+      maxAge: 365 * 24 * 60 * 60,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
+    });
 
     return Response.json({
       success: true,
       status: 200,
-      data: { token },
+      data: { token, user },
       message: "Login successful",
     });
   } catch (error) {

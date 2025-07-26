@@ -33,7 +33,6 @@ export default function LoginPage() {
       if (response.error) {
         return Notification({ message: response.error || "Something Error" });
       } else {
-        localStorage.setItem("token", response.data.token);
         Notification({ message: "Login Successful", type: "success" });
         window.location.href = "/";
       }

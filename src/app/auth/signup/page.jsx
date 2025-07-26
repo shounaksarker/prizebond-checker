@@ -36,8 +36,7 @@ export default function SignupPage() {
       if (response.error) {
         return Notification({ message: response.error || 'Something went wrong' });
       }
-      localStorage.setItem('token', response.data.token);
-      Notification({ type:'success', message: 'Account created successfully. Please login.', background: 'green', duration: 5000 });
+      Notification({ type:'success', message: 'Account created successfully!', background: 'green', duration: 5000 });
      window.location.href = "/"
     } catch (error) {
       Notification({ message: 'Signup failed due to technical issue.' });

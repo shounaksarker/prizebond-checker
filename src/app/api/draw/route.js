@@ -99,18 +99,7 @@ export async function GET(request) {
 // get lower and upper draw_id
 export async function POST(request) {
   try {
-    const headersList = request.headers;
-    const user_id = headersList.get("user_id");
-
-    if (!user_id) {
-      return Response.json({
-        success: false,
-        status: 401,
-        message: "Unauthorized: Token is required",
-      });
-    }
-
-    // Query to check if user's numbers have won
+    // This is a public endpoint - no authentication required
     const query = `
       SELECT 
         MIN(draw_id) AS first_draw, 

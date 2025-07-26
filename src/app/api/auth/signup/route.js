@@ -55,7 +55,12 @@ export async function POST(request) {
       google_user,
     });
     const cookieStore = await cookies();
-    cookieStore.set("token", token, { httpOnly: true, maxAge: 365 * 24 * 60 * 60 });
+    cookieStore.set("token", token, { 
+      httpOnly: true, 
+      maxAge: 365 * 24 * 60 * 60,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
+    });
 
     return Response.json({
       success: true,

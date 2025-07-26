@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export const apiRequest = async ({
   method = 'GET',
@@ -11,17 +11,15 @@ export const apiRequest = async ({
   ...rest
 }) => {
   try {
-    const token = localStorage.getItem('token');
-    
     const config = {
       method,
       url: `${BASE_URL}${url}`,
       data,
       headers: {
         'Content-Type': 'application/json',
-        ...(requiresAuth && token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
+      withCredentials: true, // Important: This sends cookies with requests
       ...rest,
     };
 

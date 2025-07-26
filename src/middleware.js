@@ -49,10 +49,14 @@ export async function middleware(request) {
     "/api/auth/login",
     "/api/auth/signup",
     "/api/auth/google",
+    "/api/auth/logout",
   ];
 
+  // Define specific method-based public routes
+  const isDrawRangeRequest = pathname === "/api/draw" && request.method === "POST";
+
   // Check if current route is public
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route)) || isDrawRangeRequest;
 
   // Skip auth check for public routes but still apply CORS
   if (isPublicRoute) {

@@ -31,7 +31,6 @@ export default function GoogleAuthButton( { signup = false }) {
           message: dbResponse.message || "Something Error",
         });
       }
-      localStorage.setItem("token", dbResponse.data.token);
       Notification({
         type: "success",
         message: dbResponse.message,
