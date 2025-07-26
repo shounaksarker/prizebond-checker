@@ -9,7 +9,8 @@ export function useAuth() {
     const checkAuth = async () => {
       try {
         // Make a simple API call to verify authentication
-        const response = await fetch('/api/user/check-auth', {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        const response = await fetch(`${apiUrl}/user/check-auth`, {
           method: 'GET',
           credentials: 'include', // Include cookies
         })
