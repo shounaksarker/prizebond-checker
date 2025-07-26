@@ -8,7 +8,6 @@ export function useAuth() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Make a simple API call to verify authentication
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
         const response = await fetch(`${apiUrl}/user/check-auth`, {
           method: 'GET',

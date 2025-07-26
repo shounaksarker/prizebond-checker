@@ -12,7 +12,7 @@ import Notification from "./notification";
 import { useTranslation } from '@lib/translation/useTranslation';
 
 const header = () => {
-  const isAuthenticated = useAuth();
+  const {isAuthenticated} = useAuth();
   const { lang, setLang } = useLanguage();
   const { t } = useTranslation();
   const logout = async () => {
