@@ -13,6 +13,11 @@ export default function ProfilePage() {
   const [bonds, setBonds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [bondLoading, setBondLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [sortBy, setSortBy] = useState("id");
+  const [order, setOrder] = useState("desc");
 
   // For single bond addition
   const [singleBonds, setSingleBonds] = useState([""]);
@@ -27,18 +32,20 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetchBonds();
-  }, []);
+  }, [page, pageSize, sortBy, order]);
 
   const fetchBonds = async () => {
     try {
       setBondLoading(true);
-      const response = await prizeBondAPI.getUserBonds();
+      const offset = (page - 1) * pageSize;
+      const response = await prizeBondAPI.getUserBonds({ limit: pageSize, offset, sortBy, order });
       if (response.error) {
         return Notification({
           message: response?.error || "Failed to get bonds.",
         });
       }
       setBonds(response.data);
+      setTotal(response.total);
     } catch (error) {
       Notification({
         message: "Failed to fetch bonds due to technical issue.",
@@ -144,11 +151,11 @@ export default function ProfilePage() {
           message: response?.message || "Failed to delete bond.",
         });
       }
-      setBonds((prevBonds) => prevBonds.filter((bond) => bond.id !== bondId));
       Notification({
         message: "Bond deleted successfully.",
         type: "success",
       });
+      fetchBonds();
     } catch (error) {
       Notification({
         message: "Failed to delete bond due to technical issue.",
@@ -203,6 +210,14 @@ export default function ProfilePage() {
               bonds={bonds}
               bondLoading={bondLoading}
               handleDeleteBond={handleDeleteBond}
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              onPageChange={setPage}
+              onPageSizeChange={size => { setPageSize(size); setPage(1); }}
+              sortBy={sortBy}
+              order={order}
+              onSortChange={(field, ord) => { setSortBy(field); setOrder(ord); setPage(1); }}
             />
           </Card>
 

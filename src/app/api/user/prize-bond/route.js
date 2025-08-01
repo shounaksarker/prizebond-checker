@@ -115,14 +115,37 @@ export async function GET(_) {
       });
     }
 
-    // Fetch all prize bonds for the user
-    const query = "SELECT id, bond_number FROM user_prize_bonds WHERE user_id = ?";
-    const [rows] = await db.query(query, [user_id]);
+    // Get query params for pagination and sorting
+    const url = new URL(_.url);
+    const limit = parseInt(url.searchParams.get("limit")) || 10;
+    const offset = parseInt(url.searchParams.get("offset")) || 0;
+    const sortBy = url.searchParams.get("sortBy") || "id";
+    const order = url.searchParams.get("order") || "desc";
+
+    // Validate sortBy and order
+    const validSortBy = ["id", "created_at"];
+    const validOrder = ["asc", "desc"];
+    const sortField = validSortBy.includes(sortBy) ? sortBy : "id";
+    const sortOrder = validOrder.includes(order) ? order : "desc";
+
+    // Get total count for pagination
+    const countQuery = "SELECT COUNT(*) as total FROM user_prize_bonds WHERE user_id = ?";
+    const [countRows] = await db.query(countQuery, [user_id]);
+    const total = countRows[0]?.total || 0;
+
+    // Fetch paginated and sorted prize bonds for the user
+    const query = `SELECT id, bond_number, created_at FROM user_prize_bonds WHERE user_id = ? ORDER BY ${sortField} ${sortOrder} LIMIT ? OFFSET ?`;
+    const [rows] = await db.query(query, [user_id, limit, offset]);
 
     return Response.json({
       success: true,
       status: 200,
       data: rows,
+      total,
+      limit,
+      offset,
+      sortBy: sortField,
+      order: sortOrder,
     });
   } catch (error) {
     return Response.json({
