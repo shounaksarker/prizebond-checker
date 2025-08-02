@@ -39,8 +39,8 @@ useEffect(() => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4" />
+        <Button className='text-xs !px-2 !py-1 sm:!px-8 sm:!text-sm'>
+          <Plus className="size-3 sm:size-4" />
           {t("add_prize_bonds")}
         </Button>
       </DialogTrigger>

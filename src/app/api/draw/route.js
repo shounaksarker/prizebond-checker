@@ -16,35 +16,42 @@ export async function GET(request) {
     const searchParams = request.nextUrl.searchParams;
     const draw_id = searchParams.get("draw_id");
 
-    if (!draw_id) {
-      return Response.json({
-        success: false,
-        status: 400,
-        message: "draw_id is required",
-      });
+    let query, queryParams;
+    if (draw_id) {
+      // Single draw
+      query = `
+        SELECT 
+          p.bond_number, 
+          p.prize_amount, 
+          p.draw_id, 
+          p.draw_date, 
+          p.prize_name,
+          u.is_claimed
+        FROM prize_draws p
+        INNER JOIN user_prize_bonds u ON p.bond_number = u.bond_number
+        WHERE u.user_id = ? AND p.draw_id = ? AND u.is_claimed = 0`;
+      queryParams = [user_id, draw_id];
+    } else {
+      // All draws
+      query = `
+        SELECT 
+          p.bond_number, 
+          p.prize_amount, 
+          p.draw_id, 
+          p.draw_date, 
+          p.prize_name,
+          u.is_claimed
+        FROM prize_draws p
+        INNER JOIN user_prize_bonds u ON p.bond_number = u.bond_number
+        WHERE u.user_id = ? AND u.is_claimed = 0`;
+      queryParams = [user_id];
     }
 
-    // Query to check if user's numbers have won
-    const query = `
-      SELECT 
-        p.bond_number, 
-        p.prize_amount, 
-        p.draw_id, 
-        p.draw_date, 
-        p.prize_name
-      FROM prize_draws p
-      INNER JOIN user_prize_bonds u ON p.bond_number = u.bond_number
-      WHERE u.user_id = ? AND p.draw_id = ?`;
-
-    const [results] = await db.query(query, [user_id, draw_id]);
+    const [results] = await db.query(query, queryParams);
 
     const matched_length = results.length;
 
     if (matched_length) {
-      const insertQuery = `
-        INSERT INTO user_winning_history (user_id, draw_id, bond_number, prize_amount, prize_name, draw_date)
-        VALUES ?
-      `;
       const values = results.map((result) => [
         user_id,
         result.draw_id,

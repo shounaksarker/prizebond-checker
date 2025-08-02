@@ -8,6 +8,8 @@ import BondList from "@components/profile/BondList";
 import AddBonds from "@components/profile/AddBonds";
 import UserProfile from "@components/profile/UserProfile";
 import { useTranslation } from "@lib/translation/useTranslation";
+import { Button } from "@components/ui/button";
+import Papa from "papaparse";
 
 export default function ProfilePage() {
   const [bonds, setBonds] = useState([]);
@@ -18,10 +20,10 @@ export default function ProfilePage() {
   const [total, setTotal] = useState(0);
   const [sortBy, setSortBy] = useState("id");
   const [order, setOrder] = useState("desc");
+  const [downloading, setDownloading] = useState(false);
 
   // For single bond addition
   const [singleBonds, setSingleBonds] = useState([""]);
-
   // For range bond addition
   const [rangeForm, setRangeForm] = useState({
     start: "",
@@ -38,7 +40,12 @@ export default function ProfilePage() {
     try {
       setBondLoading(true);
       const offset = (page - 1) * pageSize;
-      const response = await prizeBondAPI.getUserBonds({ limit: pageSize, offset, sortBy, order });
+      const response = await prizeBondAPI.getUserBonds({
+        limit: pageSize,
+        offset,
+        sortBy,
+        order,
+      });
       if (response.error) {
         return Notification({
           message: response?.error || "Failed to get bonds.",
@@ -52,6 +59,42 @@ export default function ProfilePage() {
       });
     } finally {
       setBondLoading(false);
+    }
+  };
+  // Download all bonds as CSV (Excel compatible)
+  const handleDownloadExcel = async () => {
+    setDownloading(true);
+    try {
+      const response = await prizeBondAPI.getUserBonds({
+        limit: total || 100000,
+        offset: 0,
+        sortBy,
+        order,
+      });
+      const allBonds = response && response.data ? response.data : [];
+      if (!allBonds.length) {
+        Notification({ message: "No bonds to export." });
+        return;
+      }
+      const data = allBonds.map((bond, idx) => ({
+        [t("serial_no")]: idx + 1,
+        [t("bond_number")]: bond.bond_number,
+        [t("date")]: new Date(bond.created_at).toLocaleDateString(),
+      }));
+      const csv = Papa.unparse(data);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "prizebonds.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      Notification({ message: "Failed to download CSV due to technical issue." });
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -70,7 +113,7 @@ export default function ProfilePage() {
     const duplicateBonds = validBonds.filter(
       (bond, index) => validBonds.indexOf(bond) !== index
     );
-    
+
     if (duplicateBonds.length) {
       return Notification({
         message: "Duplicate bonds found.",
@@ -190,8 +233,18 @@ export default function ProfilePage() {
         <div className="space-y-8">
           <Card>
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle> {t('prize_bonds')} </CardTitle>
+              <CardTitle className="text-center mb-2">
+                {t("prize_bonds")}{" "}
+              </CardTitle>
+              <div className="flex justify-between items-center flex-wrap gap-y-2">
+                <Button
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded shadow h-9 text-xs sm:px-4 sm:text-sm "
+                  onClick={handleDownloadExcel}
+                  disabled={downloading}
+                >
+                  {downloading ? t("loading_results") : t("download_excel")}
+                </Button>
                 <AddBonds
                   singleBonds={singleBonds}
                   handleBondField={handleBondField}
@@ -214,10 +267,17 @@ export default function ProfilePage() {
               pageSize={pageSize}
               total={total}
               onPageChange={setPage}
-              onPageSizeChange={size => { setPageSize(size); setPage(1); }}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
               sortBy={sortBy}
               order={order}
-              onSortChange={(field, ord) => { setSortBy(field); setOrder(ord); setPage(1); }}
+              onSortChange={(field, ord) => {
+                setSortBy(field);
+                setOrder(ord);
+                setPage(1);
+              }}
             />
           </Card>
 

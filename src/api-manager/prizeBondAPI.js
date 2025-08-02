@@ -21,5 +21,11 @@ export const prizeBondAPI = {
     apiRequest({ method: 'POST', url: '/draw' }),
     
   matchResult: (drawId) =>
-    apiRequest({ method: 'GET', url: `/draw?draw_id=${drawId}`, requiresAuth: true }),
+    apiRequest({ method: 'GET', url: drawId ? `/draw?draw_id=${drawId}` : '/draw', requiresAuth: true }),
+
+  claimBond: (bond_number) =>
+    apiRequest({ method: 'PATCH', url: '/user/prize-bond/history', data: { bond_number }, requiresAuth: true }),
+
+  getWinningHistory: () =>
+    apiRequest({ method: 'GET', url: '/user/prize-bond/history', requiresAuth: true }),
 };

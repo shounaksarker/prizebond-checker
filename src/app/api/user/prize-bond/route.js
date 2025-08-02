@@ -129,12 +129,12 @@ export async function GET(_) {
     const sortOrder = validOrder.includes(order) ? order : "desc";
 
     // Get total count for pagination
-    const countQuery = "SELECT COUNT(*) as total FROM user_prize_bonds WHERE user_id = ?";
+    const countQuery = "SELECT COUNT(*) as total FROM user_prize_bonds WHERE user_id = ? AND is_claimed = 0";
     const [countRows] = await db.query(countQuery, [user_id]);
     const total = countRows[0]?.total || 0;
 
     // Fetch paginated and sorted prize bonds for the user
-    const query = `SELECT id, bond_number, created_at FROM user_prize_bonds WHERE user_id = ? ORDER BY ${sortField} ${sortOrder} LIMIT ? OFFSET ?`;
+    const query = `SELECT id, bond_number, created_at FROM user_prize_bonds WHERE user_id = ? AND is_claimed = 0 ORDER BY ${sortField} ${sortOrder} LIMIT ? OFFSET ?`;
     const [rows] = await db.query(query, [user_id, limit, offset]);
 
     return Response.json({
