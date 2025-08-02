@@ -26,6 +26,7 @@ Imagine never having to manually check hundreds of prize bond numbers against dr
 | **⚡ Bulk Bond Entry** | Add multiple bonds at once - no more typing one by one! |
 | **🔍 Smart Matching** | Instantly matches your bonds against all winning numbers |
 | **📊 Winning History** | Track all your wins in one place with prize amounts |
+| **⬇️ Export to Excel/CSV** | Download your entire bond list as a CSV file for offline use or sharing |
 | **🌍 Bilingual Support** | Seamlessly switch between English and Bengali |
 | **🔐 Secure Authentication** | Login with email or Google - your data is always safe |
 | **📱 Mobile Friendly** | Check results on the go from any device |
@@ -110,18 +111,16 @@ Simply enter a range like "100-200" and we'll add all 101 bonds for you!
 ### 🎯 Instant Results
 Select a draw number and see all your winning bonds highlighted with prize amounts.
 
+### ⬇️ Export All Bonds to Excel/CSV
+Download your entire bond list (not just the current page) as a CSV file with one click from your profile page. Great for backups, sharing, or offline use!
+
 ### 🌐 Language Support
 Toggle between English and Bengali with a single click - আপনার সুবিধার জন্য!
 
-## 🤝 Contributing
+## 📦 Dependencies
 
-We love contributions! Whether it's:
-- 🐛 Bug fixes
-- ✨ New features
-- 📚 Documentation improvements
-- 🌍 Translation updates
-
-Feel free to open an issue or submit a pull request!
+- **UI:** [shadcn/ui](https://ui.shadcn.com/) for modern, accessible React components
+- **CSV Export:** [papaparse](https://www.papaparse.com/) for fast client-side CSV generation
 
 ## 📊 API Endpoints
 
@@ -130,6 +129,9 @@ Feel free to open an issue or submit a pull request!
 | `/api/auth/login` | POST | User login |
 | `/api/auth/signup` | POST | User registration |
 | `/api/user/bonds` | GET/POST | Manage bonds |
+| `/api/user/bonds` | DELETE | Delete a bond |
+| `/api/user/prize-bond` | PUT | Claim a bond |
+| `/api/user/prize-bond/history` | GET | Get winning history |
 | `/api/draw/check-results` | POST | Check results |
 | `/api/draw/range` | GET | Get draw ranges |
 
